@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <productinrange_index_index>
+        <label>Customer My Account Product In Range</label>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">
+            <block type="productinrange/index" name="productinrange_index" template="productinrange/index.phtml"/>
+        </reference>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>css/productinrange.css</stylesheet>
+            </action>
+        </reference>
+    </productinrange_index_index>
+    <customer_account>
+        <reference name="customer_account_navigation">
+            <action method="addLink">
+                <name>productinrange</name>
+                <path>productinrange</path>
+                <label>Product In Range</label>
+            </action>
+        </reference>
+    </customer_account>
+</layout>   
+	

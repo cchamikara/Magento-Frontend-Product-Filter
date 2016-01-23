@@ -1,0 +1,68 @@
+<div class="product-in-range">
+    <div class="input-fields">
+        <form id="product-in-range" name="product-in-range">
+            <div class="field">
+                <label for="min-price"><?php echo $this->__('Low Range:') ?></label>
+                <input id="min-price" type="text" name="min-price" class="required-entry validate-not-negative-number"/>
+            </div>
+            <div class="field">
+                <label for="max-price"><?php echo $this->__('High Range:') ?></label>
+                <input type="text" id="max-price" name="max-price"
+                       class="required-entry validate-not-negative-number validate-max-price"/>
+            </div>
+            <div class="field">
+                <label for="sort"><?php echo $this->__('Sort by:') ?></label>
+                <select name="sort" class="required-entry">
+                    <option value="asc"><?php echo $this->__('Ascending') ?></option>
+                    <option value="desc"><?php echo $this->__('Descending') ?></option>
+                </select>
+            </div>
+            <div class="field">
+                <input type="submit" class="button" value="Submit"/>
+            </div>
+            <span id="formLoader" style="display:none;">&nbsp;</span>
+        </form>
+    </div>
+    <div class="products-table" id="products-table"></div>
+</div>
+<script type="text/javascript">
+    //< ![CDATA[
+    var formId = 'product-in-range';
+    var customForm = new VarienForm(formId);
+    Validation.add('validate-max-price', 'greater than "Low Range" and no more than 5x higher than the entered "Low Range"', function (v) {
+        var min = parseInt(jQuery('#min-price').val());
+        var max = parseInt(jQuery('#max-price').val());
+        if (min >= max || max > (min * 5)) {
+            return false;
+        } else {
+            return true;
+        }
+    })
+
+    var postUrl = '<?php echo $this->getUrl("productinrange/index/request") ?>';
+    function doAjax() {
+        if (customForm.validator.validate()) {
+            new Ajax.Updater(
+                {success: 'formSuccess'}, postUrl, {
+                    method: 'post',
+                    asynchronous: true,
+                    evalScripts: false,
+                    onComplete: function (data) {
+                        jQuery('#products-table').html(data.responseText);
+                    },
+                    onLoading: function (data) {
+                        jQuery('#products-table').html('');
+                        Element.show('formLoader');
+                    },
+                    parameters: $(formId).serialize(true),
+                }
+            );
+        }
+    }
+
+    new Event.observe(formId, 'submit', function (e) {
+        e.stop();
+        doAjax();
+    });
+    //]]>
+</script>

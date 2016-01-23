@@ -1,0 +1,34 @@
+<?php $products = $this->getProducts(); ?>
+<table class="data-table product-range" id="product-range">
+    <col width="1"/>
+    <col width="1"/>
+    <col/>
+    <col width="1"/>
+    <col width="1"/>
+    <col width="1"/>
+    <thead>
+    <tr>
+        <th class="thumbnail"><?php echo $this->__('Thumbnail') ?></th>
+        <th class="sku"><?php echo $this->__('SKU') ?></th>
+        <th class="name"><?php echo $this->__('Name') ?></th>
+        <th class="qty"><?php echo $this->__('QTY') ?></th>
+        <th class="price"><?php echo $this->__('Price') ?></th>
+        <th class="view">&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($products as $product): ?>
+        <?php $product = Mage::getModel('catalog/product')->load($product->getId()) ?>
+        <tr>
+            <td class="thumb"><img
+                    src="<?php echo Mage::helper('catalog/image')->init($product, 'image')->resize(163, 100); ?>"/></td>
+            <td><?php echo $product->getSku(); ?></td>
+            <td><?php echo $product->getName(); ?></td>
+            <td><?php echo ceil($product->getStockItem()->getQty()); ?></td>
+            <td><?php echo Mage::helper('core')->currency($product->getFinalPrice(), true, false); ?></td>
+            <td><a href="<?php echo $product->getProductUrl() ?>" target="_blank">View</a></td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+<script type="text/javascript">decorateTable('product-range');</script>
